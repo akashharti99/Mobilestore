@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - The Cover House</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .admin-sidebar {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .admin-content {
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+        .nav-pill {
+            color: white;
+            border-radius: 10px;
+            margin: 5px 0;
+            transition: all 0.3s;
+        }
+        .nav-pill:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        .nav-pill.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 admin-sidebar p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <i class="fas fa-mobile-alt fa-2x me-2"></i>
+                    <h4 class="mb-0">Admin Panel</h4>
+                </div>
+                <div class="nav flex-column">
+                    <a href="/admin/add-mobilecover" class="nav-pill p-3 active">
+                        <i class="fas fa-plus-circle me-2"></i>Add Mobile Cover
+                    </a>
+                    <a href="/admin/manage-mobilecover" class="nav-pill p-3">
+                        <i class="fas fa-tasks me-2"></i>Manage Covers
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 admin-content p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-plus-circle me-2"></i>Add New Mobile Cover</h2>
+                </div>
+
+                <!-- Alert Messages -->
+                <div th:if="${session.failure!=null || session.success!=null}" class="mb-4">
+                    <div th:if="${session.failure}" class="alert alert-danger alert-dismissible fade show">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <span th:text="${session.failure}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <div th:if="${session.success}" class="alert alert-success alert-dismissible fade show">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span th:text="${session.success}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <div th:text="${@sessionMessageRemover.removeMessage()}" class="d-none"></div>
+                </div>
+
+                <!-- Add Mobile Cover Form -->
+                <div class="form-card">
+                    <form action="/admin/add-mobilecover" method="post" enctype="multipart/form-data" th:object="${mobileCover}" class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Mobile Cover Name</label>
+                            <input type="text" class="form-control" th:field="*{name}" placeholder="Enter mobile cover name">
+                            <div class="text-danger" th:errors="*{name}"></div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Mobile Brand</label>
+                            <select class="form-select" th:field="*{mobilebrand}">
+                                <option value="" selected disabled>Select Brand</option>
+                                <option value="apple">Apple</option>
+                                <option value="samsung">Samsung</option>
+                                <option value="vivo">Vivo</option>
+                                <option value="mi">MI</option>
+                                <option value="motorola">Motorola</option>
+                                <option value="infinix">Infinix</option>
+                                <option value="realme">Realme</option>
+                                <option value="tecno">Tecno</option>
+                                <option value="oppo">Oppo</option>
+                            </select>
+                            <div class="text-danger" th:errors="*{mobilebrand}"></div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" th:field="*{description}" rows="3" placeholder="Enter description"></textarea>
+                            <div class="text-danger" th:errors="*{description}"></div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Price (₹)</label>
+                            <input type="number" class="form-control" th:field="*{price}" placeholder="Enter price">
+                            <div class="text-danger" th:errors="*{price}"></div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">MRP (₹)</label>
+                            <input type="number" class="form-control" th:field="*{dummyprice}" placeholder="Enter MRP">
+                            <div class="text-danger" th:errors="*{dummyprice}"></div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Stock</label>
+                            <input type="number" class="form-control" th:field="*{stock}" placeholder="Enter stock">
+                            <div class="text-danger" th:errors="*{stock}"></div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Cover Image</label>
+                            <input type="file" class="form-control" name="image" required>
+                        </div>
+
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus-circle me-2"></i>Add Mobile Cover
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

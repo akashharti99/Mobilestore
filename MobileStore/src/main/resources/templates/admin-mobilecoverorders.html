@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Orders - The Cover House</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .admin-sidebar {
+            background-color: #2c3e50;
+            min-height: 100vh;
+        }
+        .sidebar-link {
+            color: #ecf0f1;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: #34495e;
+            color: #fff;
+        }
+        .order-card {
+            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+        .order-card:hover {
+            transform: translateY(-5px);
+        }
+        .product-image {
+            max-width: 80px;
+            height: auto;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+        .badge {
+            padding: 0.5em 1em;
+            margin-right: 0.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row g-0">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 admin-sidebar p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <i class="fas fa-mobile-alt fa-2x text-primary me-2"></i>
+                    <h4 class="text-white mb-0">Cover House</h4>
+                </div>
+                <nav class="d-flex flex-column h-100">
+                    <a href="/admin/home" class="sidebar-link p-3 rounded mb-2">
+                        <i class="fas fa-dashboard me-2"></i>Dashboard
+                    </a>
+                    <a href="/admin/add-mobilecover" class="sidebar-link p-3 rounded mb-2">
+                        <i class="fas fa-plus-circle me-2"></i>Add Cover
+                    </a>
+                    <a href="/admin/manage-mobilecover" class="sidebar-link p-3 rounded mb-2 active">
+                        <i class="fas fa-tasks me-2"></i>Manage Covers
+                    </a>
+                    <a href="/logout" class="sidebar-link p-3 rounded mt-auto">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 bg-light">
+                <header class="p-4 bg-white shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Order Management</h2>
+                        <div class="d-flex gap-2">
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-filter me-2"></i>Filter Orders
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Latest Orders</a></li>
+                                    <li><a class="dropdown-item" href="#">Oldest Orders</a></li>
+                                </ul>
+                            </div>
+                            <a href="/admin/add-mobilecover" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Add New Cover
+                            </a>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Alerts -->
+                <div class="p-4">
+                    <div th:if="${session.failure}" class="alert alert-danger alert-dismissible fade show">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <span th:text="${session.failure}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <div th:if="${session.success}" class="alert alert-success alert-dismissible fade show">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span th:text="${session.success}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </div>
+
+                <!-- Orders List -->
+                <div class="p-4">
+                    <div class="row">
+                        <div class="col-12" th:each="order : ${mobileCoverorders}">
+                            <div class="card order-card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3">
+                                            <h5 class="mb-0">
+                                                <i class="fas fa-shopping-bag me-2"></i>
+                                                Order #<span th:text="${order.orderId}"></span>
+                                            </h5>
+                                        </div>
+                                          <div class="col-md-3 text-md-end">
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-receipt me-1"></i>
+                                                Date: <span th:text="${order.orderDateTime}"></span>
+                                            </span>
+                                        </div>
+                                      
+                                        <div class="col-md-3 text-md-end">
+                                            <i class="fas fa-rupee-sign me-2"></i>
+                                            Total: <span th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 2, 'POINT')}" class="fw-bold"></span>
+                                        </div>
+                                        <div class="col-md-3 text-md-end">
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-receipt me-1"></i>
+                                                Payment ID: <span th:text="${order.paymentId}"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Order Items -->
+                                <div class="card-body">
+                                    <div th:each="item : ${order.items}" class="row align-items-center mb-3 p-3 bg-light rounded">
+                                        <div class="col-md-2">
+                                            <img class="product-image" th:src="${item.imageLink}" th:alt="${item.name}">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6 class="mb-2" th:text="${item.name}"></h6>
+                                            <span class="badge bg-primary" th:text="${item.mobilebrand}"></span>
+                                        </div>
+                                        <div class="col-md-3 text-center">
+                                            <small class="text-muted d-block">Price per unit</small>
+                                            <span class="fw-bold">₹<span th:text="${#numbers.formatDecimal(item.price/item.quantity, 0, 'COMMA', 2, 'POINT')}"></span></span>
+                                        </div>
+                                        <div class="col-md-3 text-center">
+                                            <small class="text-muted d-block">Quantity</small>
+                                            <span class="fw-bold" th:text="${item.quantity}"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Customer Details -->
+                                    <div th:each="customers : ${order.customer}" class="mt-3 p-3 bg-light rounded">
+                                        <h6 class="mb-3">Customer Information</h6>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p class="mb-2"><i class="fas fa-user me-2"></i><span th:text="${customers.name}"></span></p>
+                                                <p class="mb-2"><i class="fas fa-phone me-2"></i><span th:text="${customers.mobile}"></span></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="mb-2"><i class="fas fa-envelope me-2"></i><span th:text="${customers.email}"></span></p>
+                                                <p class="mb-2"><i class="fas fa-map-marker-alt me-2"></i><span th:text="${customers.address}"></span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

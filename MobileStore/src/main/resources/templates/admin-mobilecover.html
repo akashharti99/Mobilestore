@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - The Cover House</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .admin-sidebar {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+        }
+        .sidebar-link {
+            color: #e2e8f0;
+            transition: all 0.3s;
+            border-radius: 8px;
+            margin: 5px 0;
+        }
+        .sidebar-link:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+        .product-card {
+            transition: transform 0.3s;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        .admin-header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 admin-sidebar p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <i class="fas fa-mobile-alt fa-2x text-primary me-2"></i>
+                    <h4 class="text-white mb-0">Cover House</h4>
+                </div>
+                <div class="d-flex flex-column">
+                    <a href="/admin/home" class="sidebar-link p-3 text-decoration-none">
+                        <i class="fas fa-dashboard me-2"></i>Dashboard
+                    </a>
+                    <a href="/admin/add-mobilecover" class="sidebar-link p-3 text-decoration-none">
+                        <i class="fas fa-plus-circle me-2"></i>Add Cover
+                    </a>
+                    <a href="/admin/manage-mobilecover" class="sidebar-link p-3 text-decoration-none active">
+                        <i class="fas fa-tasks me-2"></i>Manage Covers
+                    </a>
+                    <a href="/logout" class="sidebar-link p-3 text-decoration-none mt-auto">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 bg-light">
+                <!-- Header -->
+                <div class="admin-header p-4 d-flex justify-content-between align-items-center">
+                    <h2><i class="fas fa-tasks me-2"></i>Manage Mobile Covers</h2>
+                    <a href="/admin/add-mobilecover" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add New Cover
+                    </a>
+                </div>
+
+                <!-- Alerts -->
+                <div class="p-4">
+                    <div th:if="${session.failure}" class="alert alert-danger alert-dismissible fade show">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <span th:text="${session.failure}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <div th:if="${session.success}" class="alert alert-success alert-dismissible fade show">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span th:text="${session.success}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    <div th:text="${@sessionMessageRemover.removeMessage()}" class="d-none"></div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="p-4">
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4" th:each="mobilecovers:${mobileCover}">
+                            <div class="card product-card h-100">
+                                <img class="card-img-top" th:src="${mobilecovers.imageLink}" 
+                                     style="height: 200px; object-fit: contain;" th:alt="${mobilecovers.name}"/>
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${mobilecovers.name}"></h5>
+                                    <p class="card-text text-muted" th:text="${mobilecovers.description}"></p>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="badge bg-primary" th:text="${mobilecovers.mobilebrand}"></span>
+                                        <span class="badge bg-success" th:text="'Stock: ' + ${mobilecovers.stock}"></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-muted" th:text="'₹' + ${mobilecovers.dummyprice}"></span>
+                                        <span class="text-primary fw-bold" th:text="'₹' + ${mobilecovers.price}"></span>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <a th:href="'/admin/edit-mobilecover/'+${mobilecovers.id}" 
+                                           class="btn btn-warning flex-grow-1">
+                                            <i class="fas fa-edit me-2"></i>Edit
+                                        </a>
+                                        <a th:href="'/admin/delete-mobilecover/'+${mobilecovers.id}" 
+                                           class="btn btn-danger flex-grow-1">
+                                            <i class="fas fa-trash me-2"></i>Delete
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

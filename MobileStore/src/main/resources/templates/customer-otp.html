@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - The Cover House</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .otp-container {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .otp-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+        }
+        .brand-logo {
+            height: 60px;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .otp-input {
+            font-size: 1.5rem;
+            letter-spacing: 0.5rem;
+            text-align: center;
+            border: 2px solid #6366f1;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        .submit-btn {
+            background: linear-gradient(45deg, #6366f1, #a855f7);
+            border: none;
+            transition: transform 0.3s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="otp-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="otp-card">
+                        <!-- Logo and Header -->
+                        <div class="text-center mb-4">
+                            <div class="d-flex justify-content-center align-items-center mb-3">
+                                <i class="fas fa-mobile-alt fa-3x text-primary me-2"></i>
+                                <i class="fas fa-shield-alt fa-3x text-info"></i>
+                            </div>
+                            <h2 class="fw-bold text-primary">Verify OTP</h2>
+                            <p class="text-muted">Enter the OTP sent to your registered mobile number</p>
+                        </div>
+
+                        <!-- Alert Messages -->
+                        <div th:if="${session.failure!=null || session.success!=null}" class="mb-4">
+                            <div th:if="${session.failure}" class="alert alert-danger alert-dismissible fade show">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                <span th:text="${session.failure}"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            <div th:if="${session.success}" class="alert alert-success alert-dismissible fade show">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <span th:text="${session.success}"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            <div th:text="${@sessionMessageRemover.removeMessage()}" class="d-none"></div>
+                        </div>
+
+                        <!-- OTP Form -->
+                        <form th:action="'/customer/submit-otp/'+${session.id}" method="post" class="needs-validation" novalidate>
+                            <div class="mb-4">
+                                <div class="form-floating">
+                                    <input type="text" 
+                                           class="form-control otp-input" 
+                                           id="otp" 
+                                           name="otp" 
+                                           required 
+                                           maxlength="6" 
+                                           pattern="\d{6}"
+                                           placeholder="Enter OTP">
+                                    <label for="otp">Enter 6-digit OTP</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn submit-btn text-white w-100 py-3 mb-3">
+                                <i class="fas fa-check-circle me-2"></i>Verify OTP
+                            </button>
+                            <div class="text-center">
+                                <a href="/customer/register" class="text-decoration-none">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to Registration
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // OTP input validation
+        document.querySelector('.needs-validation').addEventListener('submit', function(event) {
+            if (!this.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            this.classList.add('was-validated');
+        });
+    </script>
+</body>
+</html>

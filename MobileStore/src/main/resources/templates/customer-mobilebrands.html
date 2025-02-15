@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Brands - The Cover House</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .navbar {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            padding: 1rem 0;
+        }
+        .brand-card {
+            transition: transform 0.3s ease;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        .brand-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        .brand-icon {
+            font-size: 3rem;
+            color: #6366f1;
+            margin-bottom: 1rem;
+        }
+        .brand-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        .nav-link {
+            color: white !important;
+            transition: transform 0.3s;
+        }
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center text-white" href="/customer/home">
+                <i class="fas fa-mobile-alt fa-2x me-2"></i>
+                The Cover House
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/customer/mobilebrands">
+                            <i class="fas fa-store me-1"></i>Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/customer/cart">
+                            <i class="fas fa-shopping-cart me-1"></i>Cart
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <!-- Alert Messages -->
+        <div th:if="${session.failure!=null || session.success!=null}" class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <div th:if="${session.failure}" class="alert alert-danger alert-dismissible fade show">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <span th:text="${session.failure}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div th:if="${session.success}" class="alert alert-success alert-dismissible fade show">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span th:text="${session.success}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div th:text="${@sessionMessageRemover.removeMessage()}" class="d-none"></div>
+            </div>
+        </div>
+
+        <!-- Brand Cards -->
+        <div class="row g-4">
+            <div class="col-12 mb-4">
+                <h2 class="text-center mb-4">Select Your Mobile Brand</h2>
+                <p class="text-center text-muted">Choose your mobile brand to find the perfect cover</p>
+            </div>
+            
+            <div class="col-6 col-md-4 col-lg-3" th:each="mobilebrand : ${mobileBrands}">
+                <a th:href="@{/customer/mobile-cover/mobilebrand(mobilebrand=${mobilebrand})}" 
+                   class="text-decoration-none">
+                    <div class="card brand-card h-100">
+                        <div class="card-body text-center p-4">
+                            <i th:class="${'brand-icon fab fa-' + #strings.toLowerCase(mobilebrand)}"></i>
+                            <h5 class="brand-name" th:text="${mobilebrand}"></h5>
+                            <span class="text-muted">View Covers</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="d-flex justify-content-between mt-5">
+            <a href="/customer/home" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Home
+            </a>
+            <a href="/customer/cart" class="btn btn-primary">
+                <i class="fas fa-shopping-cart me-2"></i>View Cart
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

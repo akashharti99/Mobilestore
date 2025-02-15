@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - The Cover House</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .login-container {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            min-height: 100vh;
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        .brand-icon {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            padding: 12px;
+        }
+        .form-control:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25);
+        }
+        .btn-login {
+            background: linear-gradient(45deg, #6366f1, #a855f7);
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container d-flex align-items-center justify-content-center py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="login-card p-4 p-md-5">
+                        <!-- Brand Header -->
+                        <div class="text-center mb-4">
+                            <div class="d-inline-block mb-3">
+                                <i class="fas fa-mobile-alt brand-icon"></i>
+                               <!--  <i class="fas fa-store brand-icon ms-2"></i> -->
+                            </div>
+                            <h2 class="fw-bold">The Cover House</h2>
+                            <p class="text-muted">Welcome back! Please login to continue</p>
+                        </div>
+
+                        <!-- Alert Messages -->
+                        <div th:if="${session.failure!=null || session.success!=null}">
+                            <div th:if="${session.failure}" class="alert alert-danger alert-dismissible fade show">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                <span th:text="${session.failure}"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            <div th:if="${session.success}" class="alert alert-success alert-dismissible fade show">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <span th:text="${session.success}"></span>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            <div th:text="${@sessionMessageRemover.removeMessage()}" class="d-none"></div>
+                        </div>
+
+                        <!-- Login Form -->
+                        <form action="/login" method="post">
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <i class="fas fa-envelope text-primary me-2"></i>Email
+                                </label>
+                                <input type="text" name="email" class="form-control" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <i class="fas fa-lock text-primary me-2"></i>Password
+                                </label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-login text-white w-100 mb-4">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
+                            <div class="text-center">
+                                <p class="mb-0">Don't have an account? 
+                                    <a href="/customer/register" class="text-primary text-decoration-none">
+                                        Register here
+                                    </a>
+                                </p>
+                                <p class="mb-0">Forgot password? 
+                                    <a href="/customer/reset-password" class="text-primary text-decoration-none">
+                                        Forgot password here
+                                    </a>
+                                </p>
+                                <a href="/" class="text-muted text-decoration-none">
+                                    <i class="fas fa-home me-1"></i>Back to Home
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

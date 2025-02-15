@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - The Cover House</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .navbar {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+        .admin-card {
+            transition: transform 0.3s;
+            border: none;
+            background: linear-gradient(45deg, #fff 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .admin-card:hover {
+            transform: translateY(-10px);
+        }
+        .card-icon {
+            font-size: 3rem;
+            color: #4f46e5;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fas fa-mobile-alt fa-2x me-2"></i>
+                <span class="fw-bold">The Cover House Admin</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <div class="navbar-nav">
+                    <a class="nav-link" href="/logout">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Alert Messages -->
+    <div class="container mt-4">
+        <div th:if="${session.failure!=null || session.success!=null}">
+            <div th:if="${session.failure}" class="alert alert-danger alert-dismissible fade show">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <span th:text="${session.failure}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${session.success}" class="alert alert-success alert-dismissible fade show">
+                <i class="fas fa-check-circle me-2"></i>
+                <span th:text="${session.success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:text="${@sessionMessageRemover.removeMessage()}" class="d-none"></div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div class="container py-5">
+        <h2 class="text-center mb-5">
+            <i class="fas fa-user-shield me-2"></i>Admin Dashboard
+        </h2>
+        
+        <div class="row g-4">
+            <!-- Add Mobile Cover Card -->
+            <div class="col-md-6">
+                <div class="admin-card h-100 p-4 text-center">
+                    <i class="fas fa-plus-circle card-icon"></i>
+                    <h3 class="mb-4">Add Mobile Cover</h3>
+                    <p class="text-muted mb-4">Add new mobile covers to your inventory</p>
+                    <a href="/admin/add-mobilecover" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus me-2"></i>Add New Cover
+                    </a>
+                </div>
+            </div>
+
+            <!-- Manage Mobile Cover Card -->
+            <div class="col-md-6">
+                <div class="admin-card h-100 p-4 text-center">
+                    <i class="fas fa-tasks card-icon"></i>
+                    <h3 class="mb-4">Manage Mobile Covers</h3>
+                    <p class="text-muted mb-4">View, edit, or delete existing mobile covers</p>
+                    <a href="/admin/manage-mobilecover" class="btn btn-primary btn-lg">
+                        <i class="fas fa-cog me-2"></i>Manage Covers
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="admin-card h-100 p-4 text-center">
+                    <i class="fas fa-plus-circle card-icon"></i>
+                    <h3 class="mb-4">View Mobile Cover Orders</h3>
+                    <p class="text-muted mb-4">View new mobile covers to your inventory</p>
+                    <a href="/admin/viewmobilecoverorders" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus me-2"></i>view New Cover orders
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="row g-4 mt-4">
+            <div class="col-md-4">
+                <div class="admin-card p-4 text-center">
+                    <i class="fas fa-box card-icon"></i>
+                    <h4>Total Products</h4>
+                    <h2 class="text-primary">150</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="admin-card p-4 text-center">
+                    <i class="fas fa-shopping-cart card-icon"></i>
+                    <h4>Total Orders</h4>
+                    <h2 class="text-success">75</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="admin-card p-4 text-center">
+                    <i class="fas fa-users card-icon"></i>
+                    <h4>Total Customers</h4>
+                    <h2 class="text-info">50</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
